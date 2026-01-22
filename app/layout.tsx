@@ -7,8 +7,8 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const frankRuhl = Frank_Ruhl_Libre({ // 👈 Sacred Hebrew Serif
-  variable: "--font-frank",
+const frankRuhl = Frank_Ruhl_Libre({
+  variable: "--font-frank-ruhl", 
   subsets: ["hebrew", "latin"],
   weight: ["400", "700", "900"],
 });

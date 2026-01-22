@@ -29,7 +29,7 @@ export default function Home() {
       <header className="h-16 shrink-0 border-b border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-between px-8">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-frank font-black text-lg">ל</div>
-          <h1 className="text-lg font-frank font-black tracking-tighter">לְמַדְיָה</h1>
+          <h1 className="text-lg font-frank font-black tracking-tighter"> LamediYah.App לְמַדְיָה</h1>
         </div>
         
         {/* Your Framer Motion StatsBar */}
@@ -39,7 +39,7 @@ export default function Home() {
 
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] font-mono tracking-widest opacity-50 uppercase tracking-[0.3em]">Temple Active</span>
+          <span className="text-[10px] font-mono tracking-widest opacity-50 uppercase tracking-[0.3em]">Touch Typing App Active</span>
         </div>
       </header>
 
@@ -87,10 +87,13 @@ export default function Home() {
         </aside>
       </div>
 
-      {/* ⌨️ INPUT FOUNDATION: Fixed Keyboard */}
-      <footer className="h-72 shrink-0 bg-white/5 border-t border-white/10 backdrop-blur-3xl flex items-center justify-center">
-        <VirtualKeyboard />
-      </footer>
+<footer className="h-[300px] shrink-0 bg-slate-950/50 border-t border-white/10 backdrop-blur-3xl overflow-hidden">
+  <div className="max-w-[1400px] mx-auto h-full flex items-center justify-center p-4 lg:p-6">
+    <VirtualKeyboard />
+  </div>
+</footer>
+
+
     </main>
   );
 }
