@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTypingStore } from "@/store/useTypingStore";
 import { hebrewKeyMap } from "@/lib/data/keyboard-maps";
+import { ExerciseWisdom, exerciseMetadata } from "@/lib/data/wisdom"; 
 import { cn } from "@/lib/utils";
 
 export const WordDisplay = () => {
@@ -11,147 +12,165 @@ export const WordDisplay = () => {
     targetText,
     userInput,
     isFinished,
-    accuracy,
+    currentExercise,
+    reset,
     isHesitating,
-    currentExercise, // ✅ FIXED: Correct store field
-    reset
+    accuracy
   } = useTypingStore();
 
-  // 🧠 Get wisdom data from store (handles string | WisdomExercise)
-  const wisdom = useTypingStore(s => s.getWisdomData());
-
+  // 🧠 SAFE METADATA LOOKUP
+  // We use currentExercise as a key to pull translation/wisdom
+  const wisdom: ExerciseWisdom | undefined = currentExercise 
+    ? exerciseMetadata[currentExercise as keyof typeof exerciseMetadata]
+    : undefined;
+  // 🔑 HEBREW KEY HINT MAPPER
   const getHintKey = (char: string) => {
-    if (char === " ") return "Space";
+    if (char === " " || !char) return "Space";
     const entry = Object.entries(hebrewKeyMap).find(([_, heb]) => heb === char);
     return entry ? entry[0].toUpperCase() : null;
   };
 
+  const currentChar = targetText[userInput.length];
+  const hintKey = getHintKey(currentChar);
+
   return (
     <div className="relative w-full max-w-5xl mx-auto flex flex-col items-center gap-8">
       
-      {/* 🏺 THE MAIN ALTAR */}
-      <div className="relative w-full p-12 glass rounded-[3rem] min-h-[280px] flex items-center justify-center altar-glow border border-primary/10 shadow-2xl overflow-hidden">
+      {/* 🕊️ SACRED CONTEXT - Always Visible Wisdom */}
+      {wisdom && (
+        <div className="animate-in fade-in slide-in-from-top-4 duration-1000 text-center space-y-2 max-w-2xl mx-auto backdrop-blur-sm bg-black/20 rounded-2xl p-6 border border-amber-500/10 shadow-xl shadow-amber-500/10">
+          <h3 className="text-xl lg:text-2xl font-frank italic text-amber-200/90 leading-relaxed drop-shadow-sm">
+            "{wisdom.translation}"
+          </h3>
+          <p className="text-[11px] font-mono uppercase tracking-[0.35em] text-amber-400/70 font-semibold">
+            {wisdom.wisdom}
+          </p>
+        </div>
+      )}
+
+      {/* 🏺 THE SACRED ALTAR */}
+      <div className="relative w-full p-12 lg:p-20 bg-white/[0.02] backdrop-blur-3xl rounded-[4rem] border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center min-h-[320px]">
         
-        {/* ✨ COMPLETION OVERLAY */}
-        {isFinished && (
-          <div className="absolute inset-0 z-50 bg-purple-950/90 backdrop-blur-2xl rounded-[3rem] flex flex-col items-center justify-center animate-in fade-in zoom-in duration-500">
-            <div className="text-center space-y-6">
-              <h2 className={cn(
-                "text-5xl font-frank font-black",
-                accuracy >= 95 ? "text-primary" : "text-amber-500"
-              )}>
-                {accuracy >= 95 ? "הושלם • Excellence" : "שוב • Practice"}
-              </h2>
-              <div className="py-3 px-6 bg-white/5 rounded-2xl border border-white/10 inline-block">
-                <p className="text-3xl font-frank font-black">{accuracy}% Accuracy</p>
-              </div>
-              <button 
-                onClick={reset} 
-                className="block mx-auto px-10 py-4 bg-primary text-primary-foreground rounded-2xl font-frank font-black text-xl hover:scale-105 transition-all"
-              >
-                CONTINUE • המשך
-              </button>
+        {/* 🕯️ GUIDING LIGHT - Fixed Position Hint */}
+        {!isFinished && currentChar && isHesitating && hintKey && (
+          <div className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-black/50 backdrop-blur-xl p-4 rounded-2xl border border-amber-500/30 shadow-2xl shadow-amber-500/20 animate-in zoom-in-95 duration-500 hover:shadow-amber-500/40 transition-all">
+            <div className="flex flex-col items-center px-4 py-2 border-r border-white/10 min-w-[60px]">
+              <span className="text-[9px] font-mono uppercase text-amber-400/70 mb-1 tracking-wider">Key</span>
+              <kbd className="px-3 py-1.5 bg-amber-500/20 border border-amber-500/30 rounded-xl text-amber-400 text-sm font-bold font-mono shadow-md">
+                {hintKey}
+              </kbd>
+            </div>
+            <div className="flex flex-col items-center px-4 py-2">
+              <span className="text-[9px] font-mono uppercase text-white/40 mb-1 tracking-wider">Press</span>
+              <span className="text-3xl lg:text-4xl font-frank font-black text-white drop-shadow-2xl animate-pulse">
+                {currentChar}
+              </span>
             </div>
           </div>
         )}
 
-        {/* 📜 THE SACRED TEXT */}
-        <div className="text-5xl lg:text-7xl font-frank leading-relaxed flex flex-wrap justify-end gap-x-2 lg:gap-x-4 text-right" dir="rtl">
-          {targetText.split("").map((char, i) => {
-            const isTyped = i < userInput.length;
-            const isCurrent = i === userInput.length;
-            const isError = isTyped && userInput[i] !== targetText[i];
-            const hint = getHintKey(char);
+        {/* 📜 SACRED TEXT FLOW */}
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-6 text-center dir-rtl max-w-4xl" dir="rtl">
+          {targetText.split("").map((char, index) => {
+            let state = "neutral";
+            if (index < userInput.length) {
+              state = userInput[index] === char ? "correct" : "incorrect";
+            } else if (index === userInput.length) {
+              state = "active";
+            }
 
             return (
-              <span key={i} className="relative inline-block py-2">
-                {isCurrent && isHesitating && hint && (
-                  <div className="absolute -top-14 left-1/2 -translate-x-1/2 animate-in fade-in slide-in-from-bottom-2 duration-500 z-10">
-                    <div className="flex flex-col items-center">
-                      <span className="text-[10px] font-mono text-primary/60 uppercase tracking-widest mb-1">Type</span>
-                      <kbd className="px-3 py-1 bg-primary/20 border border-primary/40 rounded-lg text-primary text-sm font-bold shadow-lg shadow-primary/20">
-                        {hint}
-                      </kbd>
-                    </div>
-                  </div>
+              <span
+                key={index}
+                className={cn(
+                  "text-4xl lg:text-6xl font-frank font-semibold transition-all duration-300 relative inline-block py-1 px-2",
+                  state === "neutral" && "text-white/10",
+                  state === "correct" && "text-amber-400/90 drop-shadow-[0_0_20px_rgba(251,191,36,0.5)] scale-105",
+                  state === "incorrect" && "text-red-400 animate-shake scale-105 underline decoration-red-400/50 underline-offset-4",
+                  state === "active" && "text-white scale-[1.15] drop-shadow-[0_0_25px_rgba(255,255,255,0.8)]"
                 )}
-                <span className={cn(
-                  "transition-all duration-300",
-                  isCurrent && "text-primary scale-110 drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.6)]",
-                  isTyped && !isError && "text-white/90",
-                  isError && "text-red-500 underline underline-offset-8 decoration-wavy",
-                  !isTyped && !isCurrent && "text-white/10"
-                )}>
-                  {char === " " ? "\u00A0" : char}
-                </span>
-                {isCurrent && (
-                  <span className="absolute -bottom-2 left-0 w-full h-1 bg-primary rounded-full animate-pulse shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" />
+              >
+                {char === " " ? "\u00A0" : char}
+                {state === "active" && (
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-amber-500 to-transparent rounded-full animate-pulse shadow-[0_0_15px_rgba(251,191,36,0.6)]" />
                 )}
               </span>
             );
           })}
         </div>
+
+        {/* ✨ COMPLETION CELEBRATION */}
+        {isFinished && (
+          <div className="absolute inset-0 bg-gradient-to-b from-black/95 to-amber-500/5 backdrop-blur-xl flex flex-col items-center justify-center z-50 animate-in fade-in zoom-in duration-1000 rounded-[4rem] border-4 border-amber-500/20">
+            <div className="animate-[spin_3s_linear_infinite] mb-6 text-7xl drop-shadow-2xl">✨</div>
+            <h2 className={cn(
+              "text-3xl lg:text-4xl font-frank font-black tracking-widest uppercase mb-4",
+              accuracy >= 95 ? "text-amber-400 bg-gradient-to-r from-amber-400 via-white to-amber-500 bg-clip-text text-transparent drop-shadow-lg" : "text-red-400"
+            )}>
+              {accuracy >= 95 ? "הושלם • Excellence" : "שוב • Practice"}
+            </h2>
+            <div className="py-4 px-8 bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 mb-8 text-center">
+              <p className="text-2xl lg:text-3xl font-frank font-bold text-white drop-shadow-md">
+                {accuracy.toFixed(0)}% Accuracy
+              </p>
+            </div>
+            <button 
+              onClick={reset}
+              className="px-12 py-5 bg-gradient-to-r from-amber-500 to-amber-600 text-purple-950 font-frank font-black text-xl rounded-3xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-amber-500/40 border-2 border-amber-500/50 hover:shadow-amber-500/60"
+            >
+              CONTINUE • המשך
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* 🏺 THE SCROLL OF WISDOM TRIGGER */}
-      {wisdom && ( // ✅ FIXED: Use wisdom from store
+      {/* 🕯️ DEEPER WISDOM (Optional Modal Toggle) */}
+      {wisdom && (
         <button
           onClick={() => setIsWisdomOpen(true)}
-          className="group flex items-center gap-4 px-6 py-3 bg-white/5 hover:bg-primary/10 border border-white/10 hover:border-primary/40 rounded-full transition-all duration-500 animate-in slide-in-from-bottom-4"
+          className="group flex items-center gap-3 px-8 py-3 bg-white/[0.03] hover:bg-amber-500/10 border border-white/5 hover:border-amber-500/30 rounded-full transition-all duration-700 backdrop-blur-sm shadow-lg hover:shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98]"
         >
-          <span className="text-primary text-lg group-hover:rotate-12 transition-transform">🕯</span>
-          <span className="text-xs font-mono uppercase tracking-[0.3em] text-white/40 group-hover:text-primary transition-colors">
-            Reveal Wisdom • גלה חכמה
+          <span className="text-amber-400 text-lg group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">🕯</span>
+          <span className="text-[11px] font-mono uppercase tracking-[0.3em] font-semibold text-white/50 group-hover:text-amber-300">
+            Deeper Meaning
           </span>
         </button>
       )}
 
-      {/* 📜 WISDOM MODAL */}
+      {/* 📜 FULL WISDOM MODAL */}
       {isWisdomOpen && wisdom && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-6 bg-purple-950/80 backdrop-blur-xl animate-in fade-in">
-          <div className="max-w-2xl w-full glass rounded-[3.5rem] p-10 lg:p-16 border-2 border-primary/30 shadow-[0_0_100px_rgba(var(--primary-rgb),0.2)] relative">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-8 bg-[#0a0514]/95 backdrop-blur-2xl animate-in fade-in zoom-in duration-500">
+          <div className="max-w-3xl w-full bg-white/[0.05] backdrop-blur-3xl rounded-[4rem] p-12 lg:p-16 border-4 border-amber-500/20 shadow-[0_0_120px_rgba(251,191,36,0.2)] relative overflow-hidden">
             <button
               onClick={() => setIsWisdomOpen(false)}
-              className="absolute top-8 right-8 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all"
+              className="absolute top-8 right-8 w-12 h-12 flex items-center justify-center rounded-3xl bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/60 hover:text-white transition-all shadow-lg hover:scale-110"
             >
               ✕
             </button>
 
-            <div className="space-y-10 text-center">
-              <div className="space-y-4">
-                <h3 className="text-7xl lg:text-8xl font-frank font-black text-primary leading-none tracking-tighter">
-                  {targetText}
+            <div className="text-center space-y-12">
+              <div className="space-y-6">
+                <h3 className="text-5xl lg:text-7xl font-frank font-black bg-gradient-to-r from-amber-400 via-white to-amber-600 bg-clip-text text-transparent drop-shadow-2xl">
+                  {typeof currentExercise === 'string' ? currentExercise : wisdom?.translation}
                 </h3>
-                {wisdom.transliteration && (
-                  <p className="text-lg font-mono uppercase tracking-[0.4em] text-white/30 italic">
-                    {wisdom.transliteration}
-                  </p>
-                )}
+                <p className="text-2xl lg:text-3xl font-light italic text-white/90 leading-relaxed max-w-2xl mx-auto">
+                  "{wisdom.translation}"
+                </p>
               </div>
 
-              <div className="h-px w-32 mx-auto bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+              <div className="h-px w-48 mx-auto bg-gradient-to-r from-transparent via-amber-500/50 to-transparent my-8" />
 
-              <div className="space-y-6">
-                <p className="text-2xl lg:text-3xl font-frank font-bold text-white/90">
-                  {wisdom.meaning}
+              <div className="space-y-4">
+                <p className="text-xl lg:text-2xl font-frank font-semibold text-amber-100 leading-relaxed">
+                  {wisdom.wisdom}
                 </p>
-                {wisdom.pronunciation && (
-                  <p className="text-xl font-frank text-primary/80 opacity-80">
-                    {wisdom.pronunciation}
-                  </p>
-                )}
-                {wisdom.source && (
-                  <div className="inline-block px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-mono text-primary/60 uppercase tracking-widest">
-                    Source: {wisdom.source}
-                  </div>
-                )}
               </div>
 
               <button
                 onClick={() => setIsWisdomOpen(false)}
-                className="w-full py-5 rounded-2xl bg-primary text-primary-foreground font-frank font-black text-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20"
+                className="w-full py-6 lg:py-8 rounded-3xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-purple-950 font-frank font-black text-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl shadow-amber-500/40 border-2 border-amber-500/50 hover:shadow-amber-500/60"
               >
-                RETURN TO RITUAL
+                RETURN TO RITUAL • חזור לתפילה
               </button>
             </div>
           </div>

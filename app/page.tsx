@@ -42,7 +42,7 @@ export default function Home() {
 }, [isTyping]);
 
   return (
-    <main className="min-h-screen bg-purple-950 text-white overflow-hidden flex flex-col relative font-frank selection:bg-primary/30">
+    <main className="min-h-screen bg-zinc-800 text-white overflow-hidden flex flex-col relative font-frank selection:bg-primary/30">
       
       {/* 🌌 SACRED GLOW */}
       <div className={cn(
@@ -76,7 +76,7 @@ export default function Home() {
         "px-4 relative z-20 max-w-6xl mx-auto w-full transition-all duration-1000 ease-in-out overflow-hidden",
         isTyping 
           ? "grid-rows-[0fr] opacity-0 -translate-y-4 pointer-events-none max-h-0 py-0" 
-          : "grid-rows-[1fr] opacity-100 translate-y-0 py-12 max-h-[600px]"
+          : "grid-rows-[1fr] opacity-100 translate-y-0 py-6 max-h-[600px]"
       )}>
         <div className="overflow-hidden grid">
           <LessonSelector />

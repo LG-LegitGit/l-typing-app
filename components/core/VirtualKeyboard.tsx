@@ -67,7 +67,7 @@ export const VirtualKeyboard = () => {
 
 
       {/* ⌨️ MAIN KEYBOARD - Full width remaining space */}
-      <div className="flex-1 h-full flex flex-col gap-1.5 p-4 lg:p-6 relative" dir="ltr">
+      <div className="flex-1 h-full flex flex-col gap-1.5 p-4 lg:p-6 relative bg-black/20 backdrop-blur-sm" dir="ltr">
         
         {/* Row 1: Numbers */}
         <div className="flex gap-0.5 pl-3 pr-2 h-12 lg:h-14">
