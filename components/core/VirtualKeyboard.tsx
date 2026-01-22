@@ -38,31 +38,33 @@ export const VirtualKeyboard = () => {
   return (
     <div className="w-full h-full flex items-stretch gap-6 glass rounded-[2.5rem] altar-glow shadow-2xl overflow-hidden">
       
-      {/* 🖐️ SIDE PROFILE - Compact RTL guidance */}
-      <div className="w-24 lg:w-28 flex flex-col justify-center items-center gap-6 p-6 border-r border-white/10 bg-black/30 backdrop-blur-sm rounded-l-[2.5rem]">
-        <div className="flex flex-col gap-4 items-center space-y-2">
-          {/* Finger Indicators - R then L for Hebrew flow */}
-          <FingerIndicator label="R" active={activeFinger?.startsWith('right')} />
-          <FingerIndicator label="L" active={activeFinger?.startsWith('left')} />
-        </div>
+{/* 🖐️ SIDE PROFILE - Compact RTL guidance */}
+<div className="w-24 lg:w-28 flex flex-col justify-center items-center gap-6 p-6 border-r border-white/10 bg-black/30 backdrop-blur-sm rounded-l-[2.5rem]">
+  
+  {/* 👈 R|L SIDE-BY-SIDE - Always perfectly framed */}
+  <div className="flex gap-3 items-center mb-2">
+    <FingerIndicator label="R" active={activeFinger?.startsWith('right')} />
+    <FingerIndicator label="L" active={activeFinger?.startsWith('left')} />
+  </div>
 
-        {/* Next Key Preview */}
-        <div className="text-center space-y-2 w-full">
-          <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-primary/50 block">המקש הבא</span>
-          <div className="flex items-center gap-2 px-2 py-2 bg-white/5 rounded-xl border border-white/10">
-            <span className="text-2xl lg:text-3xl font-frank font-black text-primary drop-shadow-lg">
-              {nextQwertyKey || "—"}
-            </span>
-            <span className="text-primary/30 font-mono text-sm">→</span>
-            <span className="text-2xl lg:text-3xl font-frank font-black text-white/90">
-              {nextChar || "—"}
-            </span>
-          </div>
-          <span className="text-[9px] font-mono text-white/40">
-            {activeFinger?.replace('-', ' ') || "התחלה"}
-          </span>
-        </div>
-      </div>
+  {/* Next Key Preview */}
+  <div className="text-center space-y-2 w-full">
+    <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-primary/50 block">המקש הבא</span>
+    <div className="flex items-center gap-2 px-2 py-2 bg-white/5 rounded-xl border border-white/10">
+      <span className="text-2xl lg:text-3xl font-frank font-black text-primary drop-shadow-lg">
+        {nextQwertyKey || "—"}
+      </span>
+      <span className="text-primary/30 font-mono text-sm">→</span>
+      <span className="text-2xl lg:text-3xl font-frank font-black text-white/90">
+        {nextChar || "—"}
+      </span>
+    </div>
+    <span className="text-[9px] font-mono text-white/40">
+      {activeFinger?.replace('-', ' ') || "התחלה"}
+    </span>
+  </div>
+</div>
+
 
       {/* ⌨️ MAIN KEYBOARD - Full width remaining space */}
       <div className="flex-1 h-full flex flex-col gap-1.5 p-4 lg:p-6 relative" dir="ltr">

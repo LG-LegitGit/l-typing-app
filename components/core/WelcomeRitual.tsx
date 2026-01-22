@@ -16,6 +16,22 @@ export const WelcomeRitual = () => {
     setTarget(exerciseTexts.letters.beginner[0], 'letters', 'beginner');
   }, [setTarget]);
 
+  // ⚔️ MOVE THIS HERE (Above the early return)
+  const enterZenMode = useCallback(() => {
+    const element = document.documentElement;
+    const requestMethod = element.requestFullscreen || 
+                          (element as any).webkitRequestFullscreen || 
+                          (element as any).mozRequestFullScreen || 
+                          (element as any).msRequestFullscreen;
+
+    if (requestMethod) {
+      requestMethod.call(element).catch(() => {
+        console.warn("Zen mode focus preserved without fullscreen.");
+      });
+    }
+    startRitual();
+  }, [startRitual]);
+
   useEffect(() => {
     const hasVisited = localStorage.getItem("temple_onboarded");
     if (!hasVisited) setIsOpen(true);
@@ -27,7 +43,9 @@ export const WelcomeRitual = () => {
     return () => window.removeEventListener("keydown", handleEsc);
   }, [startRitual]);
 
+  // 🚪 EARLY RETURN MUST BE LAST
   if (!isOpen) return null;
+
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-slate-950/98 backdrop-blur-3xl transition-all duration-700 animate-in fade-in">
@@ -180,13 +198,14 @@ export const WelcomeRitual = () => {
             </div>
 
             <button 
-              onClick={startRitual}
-              className="group w-full h-24 lg:h-28 bg-gradient-to-r from-primary via-accent to-primary text-primary-foreground rounded-[2.5rem] font-frank font-black text-3xl lg:text-4xl shadow-[0_30px_80px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_40px_100px_rgba(var(--primary-rgb),0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 overflow-hidden border-2 border-primary/20"
+            onClick={enterZenMode} // 👈 Fullscreen + start typing
+            className="group w-full h-24 lg:h-28 bg-gradient-to-r from-primary via-accent to-primary text-primary-foreground rounded-[2.5rem] font-frank font-black text-3xl lg:text-4xl shadow-[0_30px_80px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_40px_100px_rgba(var(--primary-rgb),0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 overflow-hidden border-2 border-primary/20"
             >
-              <span className="relative z-10 flex items-center justify-center h-full gap-4 backdrop-blur-sm">
+            <span className="relative z-10 flex items-center justify-center h-full gap-4 backdrop-blur-sm">
                 ENTER TEMPLE שדגכעיהל
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-[2.5rem]" />
+                <span className="text-primary-foreground/70 text-sm font-mono uppercase tracking-wider animate-pulse">F11</span>
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-[2.5rem]" />
             </button>
 
             <div className="text-center">
