@@ -1,99 +1,75 @@
-"use client";
-
-import { useEffect, useCallback } from "react";
-import { useTypingStore } from "@/store/useTypingStore";
-import { exerciseTexts } from "@/lib/data/exercises";
-// Core Components
-import { TypingEngine } from "@/components/core/TypingEngine";
+import { WelcomeRitual } from "@/components/core/WelcomeRitual";
 import { WordDisplay } from "@/components/core/WordDisplay";
 import { VirtualKeyboard } from "@/components/core/VirtualKeyboard";
-import { StatsBar } from "@/components/core/StatsBar";
-import { LessonSelector } from "@/components/core/LessonSelector"; // Using this one
-import { LiveStats } from "@/components/core/LiveStats"; // Adding side-analytics
+import { LessonSelector } from "@/components/core/LessonSelector";
+import { LiveStats } from "@/components/core/LiveStats";
+import { TypingEngine } from "@/components/core/TypingEngine";
+import { SoundEngine } from "@/components/core/SoundEngine";
 
 export default function Home() {
-  const { targetText, setTarget, isFinished, reset } = useTypingStore();
-
-  // Initial Target Setup
-  useEffect(() => {
-    if (!targetText) {
-      setTarget(exerciseTexts.letters.beginner[0]);
-    }
-  }, [targetText, setTarget]);
-
   return (
-    <main className="h-screen w-full bg-[#020617] text-slate-50 flex flex-col overflow-hidden font-sans">
-      <TypingEngine /> {/* Headless - must be rendered to listen for keys */}
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-black to-slate-950 text-white overflow-hidden flex flex-col">
+      
+      {/* 🧠 LOGIC ENGINES (Headless) */}
+      <TypingEngine />
+      <SoundEngine />
+      
+      {/* 🏛️ HERO HEADER: Compact Identity + Navigation */}
+      <header className="relative z-10 pt-10 pb-4 text-center px-4 shrink-0 animate-in fade-in slide-in-from-top-4 duration-1000">
+        <div className="inline-flex items-center justify-between gap-4 bg-white/[0.03] backdrop-blur-2xl px-6 py-3 rounded-full border border-white/10 shadow-2xl max-w-2xl mx-auto w-full md:w-auto">
+          
+          {/* Brand Mark */}
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-lg transform -rotate-6 transition-transform hover:rotate-0">
+              <span className="text-xl font-frank font-black text-primary-foreground leading-none">ל</span>
+            </div>
+            <div className="text-left hidden sm:block">
+              <h1 className="text-xl font-frank font-black tracking-tight leading-none bg-gradient-to-r from-primary via-white to-primary bg-clip-text text-transparent">
+                LamediYah
+              </h1>
+              <p className="text-[8px] font-mono uppercase tracking-[0.2em] text-primary/60">Teaches Typing</p>
+            </div>
+          </div>
 
-      {/* 🏺 TOP BAR: Brand & Animated Stats */}
-      <header className="h-16 shrink-0 border-b border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-between px-8">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-frank font-black text-lg">ל</div>
-          <h1 className="text-lg font-frank font-black tracking-tighter"> LamediYah.App לְמַדְיָה</h1>
-        </div>
-        
-        {/* Your Framer Motion StatsBar */}
-        <div className="flex-1 max-w-sm mx-8">
-          <StatsBar />
-        </div>
+          <div className="h-6 w-px bg-white/10 mx-2" />
 
-        <div className="flex items-center gap-2">
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] font-mono tracking-widest opacity-50 uppercase tracking-[0.3em]">Touch Typing App Active</span>
+          {/* Lesson Control */}
+          <div className="flex-1 md:flex-initial">
+            <LessonSelector />
+          </div>
         </div>
       </header>
 
-      {/* 📱 CENTRAL OPERATING AREA */}
-      <div className="flex-1 flex overflow-hidden p-6 gap-6">
+      {/* 🎮 THE ALTAR: Focused Word Display Area */}
+      <section className="flex-1 flex flex-col items-center justify-center max-w-6xl mx-auto w-full px-6 relative">
+        {/* Subtle background glow behind the text */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.05)_0%,transparent_70%)] pointer-events-none" />
         
-        {/* 📜 THE ALTAR: Word Display Area */}
-        <section className="flex-[3] relative bg-white/[0.02] border border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center p-12 overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.07)_0%,transparent_70%)] pointer-events-none" />
-          
-          <WordDisplay />
-
-          {/* Completion Overlay */}
-          {isFinished && (
-            <div className="absolute inset-0 z-50 bg-slate-950/90 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-700">
-              <h2 className="text-5xl font-frank font-black mb-8 text-primary">הושלם • Complete</h2>
-              <button 
-                className="px-12 py-4 bg-primary text-primary-foreground rounded-full font-frank text-xl hover:scale-105 transition-transform"
-                onClick={reset}
-              >
-                Reset Ritual
-              </button>
-            </div>
-          )}
-        </section>
-
-        {/* ⚙️ COMMAND TOWER: Lesson Selection & Live Progress */}
-        <aside className="flex-1 max-w-sm flex flex-col gap-4 overflow-hidden">
-          
-          {/* Your LessonSelector Component */}
-          <LessonSelector />
-
-          {/* Your LiveStats Component (Progress + Stat Cards) */}
-          <div className="flex-1 overflow-y-auto pr-2 space-y-4">
-             <LiveStats />
-             
-             {/* Simple Helper Card */}
-             <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
-                <p className="text-[11px] font-mono text-primary/60 italic leading-relaxed text-center">
-                  "Speed is a byproduct of accuracy. Let the rhythm guide your hands."
-                </p>
-             </div>
+        <div className="w-full space-y-12 relative z-10">
+          {/* Centered Stats - Acts as a bridge between Nav and Text */}
+          <div className="flex justify-center animate-in fade-in zoom-in duration-700 delay-300">
+            <LiveStats />
           </div>
           
-        </aside>
-      </div>
+          {/* The "Sacred Scroll" Area */}
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
+            <WordDisplay />
+          </div>
+        </div>
+      </section>
 
-<footer className="h-[300px] shrink-0 bg-slate-950/50 border-t border-white/10 backdrop-blur-3xl overflow-hidden">
-  <div className="max-w-[1400px] mx-auto h-full flex items-center justify-center p-4 lg:p-6">
-    <VirtualKeyboard />
-  </div>
-</footer>
+      {/* ⌨️ THE FOUNDATION: Keyboard at bottom */}
+      <footer className="w-full h-[340px] shrink-0 bg-slate-950/50 border-t border-white/5 backdrop-blur-3xl pt-8 pb-12 z-20">
+        <div className="max-w-5xl mx-auto px-6 h-full flex flex-col items-center justify-between">
+          <VirtualKeyboard />
+          <p className="text-[10px] font-mono uppercase tracking-[0.5em] text-white/20 mt-8">
+             English Hand <span className="mx-4 text-primary opacity-40">•</span> Hebrew Soul
+          </p>
+        </div>
+      </footer>
 
-
+      {/* ✨ WELCOME RITUAL */}
+      <WelcomeRitual />
     </main>
   );
 }

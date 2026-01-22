@@ -1,50 +1,40 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { useTypingStore } from "@/store/useTypingStore";
 
 export const TypingEngine = () => {
-  const { processKey, isFinished, reset, setTarget } = useTypingStore();
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      // 1. Accessibility & Input safety
-      if (
-        document.activeElement?.tagName === "INPUT" ||
-        document.activeElement?.tagName === "TEXTAREA"
-      ) return;
-
-      // 2. UX Shortcuts
-      if (e.key === "Escape") {
-        e.preventDefault();
-        reset(); // Clear current progress
-        return;
-      }
-
-      if (e.key === "Tab") {
-        e.preventDefault();
-        // Logic to trigger a new random lesson could go here
-        return;
-      }
-
-      // 3. Prevent scroll/browser behavior for typing keys
-      if ([" ", "Backspace", "Enter"].includes(e.key)) {
-        e.preventDefault();
-      }
-
-      // 4. Ignore Command/System keys
-      if (e.metaKey || e.ctrlKey || e.altKey || isFinished) return;
-
-      // 5. Hand off to the Store
-      processKey(e.key);
-    },
-    [processKey, isFinished, reset]
-  );
+  const { processKey, isFinished, setHesitating } = useTypingStore();
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // 1. If user presses a key, they aren't hesitating anymore
+      if (timerRef.current) clearTimeout(timerRef.current);
+      setHesitating(false);
 
-  return null;
+      // 2. Process the key through our mapping (A -> ש)
+      // Only process if it's a single character or Backspace
+      if (e.key.length === 1 || e.key === "Backspace") {
+        processKey(e.key);
+      }
+
+      // 3. Start the "Teacher's Watch"
+      // If they haven't finished, start a 3-second timer
+      if (!isFinished) {
+        timerRef.current = setTimeout(() => {
+          setHesitating(true);
+        }, 3000); // 3 seconds of silence triggers the "Ghost Hint"
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [processKey, isFinished, setHesitating]);
+
+  return null; // Headless component - just logic
 };

@@ -144,7 +144,7 @@ const Key = ({ cap, active, target, hebrew, className = "", size = "md" }: any) 
 
 const FingerIndicator = ({ label, active }: { label: string; active?: boolean }) => (
   <div className={cn(
-    "w-12 h-12 lg:w-8 lg:h-8 rounded-2xl flex items-center justify-center border-4 transition-all duration-500 font-mono font-bold text-sm shadow-lg",
+    "w-8 h-8 lg:w-7 lg:h-7 rounded-2xl flex items-center justify-center border-4 transition-all duration-500 font-mono font-bold text-sm shadow-lg",
     active 
       ? "border-primary bg-gradient-to-br from-primary/30 to-accent/20 text-primary shadow-[0_0_25px_rgba(var(--primary),0.6)] animate-pulse" 
       : "border-white/10 bg-white/5 text-white/20 hover:border-white/20"

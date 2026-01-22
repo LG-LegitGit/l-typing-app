@@ -24,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="he" dir="rtl" className="dark"> {/* 👈 Default to RTL and Dark */}
-      <body className={`${geistSans.variable} ${frankRuhl.variable} antialiased font-sans`}>
+    <html lang="en" className="dark notranslate" translate="no"> 
+      <body className={`${geistSans.variable} ${frankRuhl.variable} antialiased font-sans bg-slate-950`}>
         {children}
       </body>
     </html>
