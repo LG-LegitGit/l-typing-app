@@ -34,7 +34,7 @@ export const WordDisplay = () => {
         
         {/* ✨ COMPLETION OVERLAY */}
         {isFinished && (
-          <div className="absolute inset-0 z-50 bg-slate-950/90 backdrop-blur-2xl rounded-[3rem] flex flex-col items-center justify-center animate-in fade-in zoom-in duration-500">
+          <div className="absolute inset-0 z-50 bg-purple-950/90 backdrop-blur-2xl rounded-[3rem] flex flex-col items-center justify-center animate-in fade-in zoom-in duration-500">
             <div className="text-center space-y-6">
               <h2 className={cn(
                 "text-5xl font-frank font-black",
@@ -108,7 +108,7 @@ export const WordDisplay = () => {
 
       {/* 📜 WISDOM MODAL */}
       {isWisdomOpen && wisdom && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-xl animate-in fade-in">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-6 bg-purple-950/80 backdrop-blur-xl animate-in fade-in">
           <div className="max-w-2xl w-full glass rounded-[3.5rem] p-10 lg:p-16 border-2 border-primary/30 shadow-[0_0_100px_rgba(var(--primary-rgb),0.2)] relative">
             <button
               onClick={() => setIsWisdomOpen(false)}

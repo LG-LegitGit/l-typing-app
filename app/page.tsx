@@ -1,3 +1,5 @@
+"use client";
+import { useEffect } from "react";
 import { WelcomeRitual } from "@/components/core/WelcomeRitual";
 import { WordDisplay } from "@/components/core/WordDisplay";
 import { VirtualKeyboard } from "@/components/core/VirtualKeyboard";
@@ -5,70 +7,117 @@ import { LessonSelector } from "@/components/core/LessonSelector";
 import { LiveStats } from "@/components/core/LiveStats";
 import { TypingEngine } from "@/components/core/TypingEngine";
 import { SoundEngine } from "@/components/core/SoundEngine";
+import { useTypingStore } from "@/store/useTypingStore";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-black to-slate-950 text-white overflow-hidden flex flex-col">
+  const { isTyping, category, difficulty } = useTypingStore();  
+  
+  // 🧘‍♂️ FOCUS LIBERATOR - Forces WordDisplay focus after settings
+  useEffect(() => {
+    if (isTyping && document.activeElement instanceof HTMLElement) {
+      // Blur any buttons/settings, focus goes to document body → TypingEngine
+      document.activeElement.blur();
       
-      {/* 🧠 LOGIC ENGINES (Headless) */}
+      // Small delay ensures TypingEngine captures next keystroke
+      requestAnimationFrame(() => {
+        document.body.focus();
+      });
+    }
+  }, [isTyping]);
+
+  return (
+    <main className="min-h-screen bg-purple-950 text-white overflow-hidden flex flex-col relative font-frank selection:bg-primary/30">
+      
+      {/* 🌌 SACRED GLOW */}
+      <div className={cn(
+        "absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.05)_0%,transparent_70%)] pointer-events-none z-0 transition-all duration-1000",
+        isTyping ? "opacity-100 scale-102" : "opacity-30 scale-100"
+      )} />
+      
       <TypingEngine />
       <SoundEngine />
       
-      {/* 🏛️ HERO HEADER: Compact Identity + Navigation */}
-      <header className="relative z-10 pt-10 pb-4 text-center px-4 shrink-0 animate-in fade-in slide-in-from-top-4 duration-1000">
-        <div className="inline-flex items-center justify-between gap-4 bg-white/[0.03] backdrop-blur-2xl px-6 py-3 rounded-full border border-white/10 shadow-2xl max-w-2xl mx-auto w-full md:w-auto">
-          
-          {/* Brand Mark */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-lg transform -rotate-6 transition-transform hover:rotate-0">
-              <span className="text-xl font-frank font-black text-primary-foreground leading-none">ל</span>
-            </div>
-            <div className="text-left hidden sm:block">
-              <h1 className="text-xl font-frank font-black tracking-tight leading-none bg-gradient-to-r from-primary via-white to-primary bg-clip-text text-transparent">
-                LamediYah
-              </h1>
-              <p className="text-[8px] font-mono uppercase tracking-[0.2em] text-primary/60">Teaches Typing</p>
-            </div>
-          </div>
-
-          <div className="h-6 w-px bg-white/10 mx-2" />
-
-          {/* Lesson Control */}
-          <div className="flex-1 md:flex-initial">
-            <LessonSelector />
+      {/* 🏛️ HEADER - Fades to backdrop */}
+      <header className={cn(
+        "relative z-30 pt-12 pb-4 text-center px-4 shrink-0 transition-all duration-800 ease-out",
+        isTyping ? "opacity-10 blur-sm -translate-y-8 scale-95" : "opacity-100 blur-none translate-y-0 scale-100"
+      )}>
+        <div className="inline-flex items-center justify-center gap-4 bg-white/[0.04] backdrop-blur-3xl px-8 py-4 rounded-[3rem] border border-white/10 shadow-2xl">
+          <span className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-xl transform -rotate-6">
+            <span className="text-2xl font-black text-primary-foreground leading-none">ל</span>
+          </span>
+          <div className="text-left">
+            <h1 className="text-xl font-black tracking-tight uppercase bg-gradient-to-r from-primary via-white to-primary bg-clip-text text-transparent leading-none">
+              LamediYah
+            </h1>
+            <p className="text-[8px] font-mono uppercase tracking-[0.3em] text-primary/70">Teaches Typing</p>
           </div>
         </div>
       </header>
 
-      {/* 🎮 THE ALTAR: Focused Word Display Area */}
-      <section className="flex-1 flex flex-col items-center justify-center max-w-6xl mx-auto w-full px-6 relative">
-        {/* Subtle background glow behind the text */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.05)_0%,transparent_70%)] pointer-events-none" />
+      {/* 🎯 LESSON SELECTOR - CSS GRID COLLAPSE PERFECTION */}
+      <section className={cn(
+        "px-4 relative z-20 max-w-6xl mx-auto w-full transition-all duration-1000 ease-in-out overflow-hidden",
+        isTyping 
+          ? "grid-rows-[0fr] opacity-0 -translate-y-4 pointer-events-none max-h-0 py-0" 
+          : "grid-rows-[1fr] opacity-100 translate-y-0 py-12 max-h-[600px]"
+      )}>
+        <div className="overflow-hidden grid">
+          <LessonSelector />
+        </div>
+      </section>
+
+      {/* ⚡ SACRED ALTAR - PERFECT CENTER */}
+      <section className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full px-6 relative z-20 transition-all duration-1000 ease-out">
         
-        <div className="w-full space-y-12 relative z-10">
-          {/* Centered Stats - Acts as a bridge between Nav and Text */}
-          <div className="flex justify-center animate-in fade-in zoom-in duration-700 delay-300">
+        {/* 🧘 ZEN BREADCRUMB */}
+        <div className={cn(
+          "mb-8 transition-all duration-1000 ease-out font-mono text-[11px] uppercase tracking-[0.4em] text-primary/70 flex items-center gap-3",
+          isTyping ? "opacity-100 scale-105" : "opacity-0 scale-95 -translate-y-2"
+        )}>
+          <span className="font-bold">{category}</span>
+          <span className="w-px h-px rounded-full bg-primary/40" />
+          <span>{difficulty}</span>
+        </div>
+
+        <div className="w-full flex-1 flex flex-col items-center justify-center space-y-12 relative z-10">
+          {/* LiveStats - Enhanced when typing */}
+          <div className={cn(
+            "transition-all duration-1000 ease-out",
+            isTyping ? "opacity-100 scale-110 -translate-y-3 shadow-2xl" : "opacity-50 scale-100 shadow-lg"
+          )}>
             <LiveStats />
           </div>
           
-          {/* The "Sacred Scroll" Area */}
-          <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
+          {/* Holy WordDisplay - Center stage */}
+          <div className="flex-1 flex items-center justify-center w-full min-h-[240px] transition-all duration-1000">
             <WordDisplay />
+          </div>
+
+          {/* Spacebar Hint */}
+          <div className={cn(
+            "text-center transition-all duration-800 ease-out font-mono text-[10px] uppercase tracking-[0.4em] text-white/20",
+            isTyping ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-95"
+          )}>
+            Press <span className="text-primary font-bold px-3 py-1.5 bg-white/5 rounded-lg border border-white/10 mx-1 backdrop-blur-sm">Space</span> to restart
           </div>
         </div>
       </section>
 
-      {/* ⌨️ THE FOUNDATION: Keyboard at bottom */}
-      <footer className="w-full h-[340px] shrink-0 bg-slate-950/50 border-t border-white/5 backdrop-blur-3xl pt-8 pb-12 z-20">
+      {/* ⌨️ KEYBOARD FOUNDATION */}
+      <footer className={cn(
+        "w-full h-[360px] shrink-0 bg-purple-950/80 border-t border-white/5 backdrop-blur-3xl pt-12 pb-16 z-50 relative transition-all duration-1000 ease-out",
+        isTyping ? "opacity-100 shadow-2xl border-primary/20" : "opacity-85 shadow-xl"
+      )}>
         <div className="max-w-5xl mx-auto px-6 h-full flex flex-col items-center justify-between">
           <VirtualKeyboard />
-          <p className="text-[10px] font-mono uppercase tracking-[0.5em] text-white/20 mt-8">
-             English Hand <span className="mx-4 text-primary opacity-40">•</span> Hebrew Soul
+          <p className="text-[10px] font-mono uppercase tracking-[0.5em] text-white/20 pt-8">
+            English Hand <span className="mx-4 text-primary/50">•</span> Hebrew Soul
           </p>
         </div>
       </footer>
 
-      {/* ✨ WELCOME RITUAL */}
       <WelcomeRitual />
     </main>
   );

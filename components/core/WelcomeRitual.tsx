@@ -48,7 +48,7 @@ export const WelcomeRitual = () => {
 
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-slate-950/98 backdrop-blur-3xl transition-all duration-700 animate-in fade-in">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-purple-950/98 backdrop-blur-3xl transition-all duration-700 animate-in fade-in">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.15)_0%,transparent_70%)] pointer-events-none" />
       
       <div className="max-w-2xl w-full glass rounded-[3.5rem] p-8 lg:p-14 border-4 border-primary/20 text-center shadow-[0_0_120px_rgba(var(--primary-rgb),0.2)] relative overflow-hidden">

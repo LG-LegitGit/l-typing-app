@@ -25,6 +25,8 @@ interface TypingState {
   category: 'letters' | 'roots' | 'verses' | 'prayers';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   isHesitating: boolean;
+  isTyping: boolean; // 👈 NEW
+
 
   // Actions
   processKey: (key: string) => void;
@@ -53,6 +55,7 @@ export const useTypingStore = create<TypingState>((set, get) => ({
   category: 'letters',
   difficulty: 'beginner',
   isHesitating: false,
+  isTyping: false, // 👈 NEW
 
   setHesitating: (val) => set({ isHesitating: val }),
 

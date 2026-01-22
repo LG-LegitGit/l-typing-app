@@ -3,89 +3,107 @@
 import { useTypingStore } from "@/store/useTypingStore";
 import { cn } from "@/lib/utils";
 
-const blurActiveElement = () => {
-  if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
-    document.activeElement.blur();
-  }
-};
-
 export function LessonSelector() {
   const { category, setCategory, difficulty, setDifficulty } = useTypingStore();
 
-  const categoryTooltips = {
-    letters: "Master Alphabet • Focus on Home Row keys (A, S, D, F...)",
-    roots: "Sacred Roots • Learn core Hebrew grammar (3-letter roots)",
-    verses: "Sacred Torah • Type full verses from the Tanakh",
-    prayers: "Liturgy • Connect with traditional blessings"
+  const categories = [
+    { id: 'letters', heb: "אותיות", en: "Letters", hint: "Master the Home Row (A,S,D,F...)" },
+    { id: 'roots', heb: "שורשים", en: "Roots", hint: "The 3-letter DNA of the language" },
+    { id: 'verses', heb: "פסוקים", en: "Verses", hint: "Sacred wisdom from the Tanakh" },
+    { id: 'prayers', heb: "תפילות", en: "Prayers", hint: "Blessings & Liturgy" },
+  ];
+
+  const difficulties = [
+    { id: 'beginner', heb: "מתחיל", en: "Beginner", keys: "שדגכעיהל" },
+    { id: 'intermediate', heb: "בינוני", en: "Intermediate", keys: "Full Alphabet" },
+    { id: 'advanced', heb: "מתקדם", en: "Advanced", keys: "Finals & Numbers" },
+  ];
+
+  // 🧘‍♂️ INSTANT FOCUS RELEASE
+  const handleCategoryChange = (val: string) => {
+    setCategory(val);
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur(); // 👈 Release focus immediately
+    }
   };
 
-  const difficultyTooltips = {
-    beginner: "Home Row Only\n(ש ד ג כ ע י ה ל)\nShort exercises.",
-    intermediate: "Full Keyboard\n(Upper & Lower Rows)\nModerate length.",
-    advanced: "Complete Fluency\n(Includes Final Letters)\nFull endurance."
+  const handleDifficultyClick = (level: string) => {
+    setDifficulty(level);
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur(); // 👈 Release focus immediately
+    }
   };
 
   return (
-    // 🛡️ isolation-isolate prevents the "bleed" by creating a local zenith
-    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 py-1 isolation-isolate">
+    <div className="w-full max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       
-      {/* 🏺 PATHWAY */}
-      <div className="flex items-center gap-3 group relative">
-        <label className="text-[9px] font-mono tracking-[0.2em] text-white/20 uppercase hidden lg:block">Pathway</label>
-        
-        <div className="relative flex items-center">
-          <select 
-            value={category}
-            onChange={(e) => { setCategory(e.target.value as any); blurActiveElement(); }}
-            className="bg-transparent text-primary font-frank text-sm lg:text-base outline-none cursor-pointer hover:text-white transition-colors appearance-none pr-6 relative z-10"
+      {/* 🏺 PATHWAY GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => handleCategoryChange(cat.id as any)} // 👈 WIRED UP
+            className={cn(
+              "relative flex flex-col p-5 rounded-[2rem] transition-all duration-500 text-right group overflow-hidden",
+              category === cat.id 
+                ? "bg-primary/10 border-2 border-primary/40 shadow-[0_0_40px_rgba(var(--primary-rgb),0.15)]" 
+                : "bg-white/[0.03] border-2 border-transparent hover:bg-white/[0.06] hover:border-white/10"
+            )}
           >
-            <option className="bg-slate-950" value="letters">Letters (אותיות)</option>
-            <option className="bg-slate-950" value="roots">Roots (שורשים)</option>
-            <option className="bg-slate-950" value="verses">Verses (פסוקים)</option>
-            <option className="bg-slate-950" value="prayers">Prayers (תפילות)</option>
-          </select>
-
-          {/* 💡 THE ZENITH TOOLTIP (Upward from settings) */}
-<div className="absolute bottom-full right-0 mb-3 p-4 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-primary/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-[9999] pointer-events-none min-w-[260px]">
-  <div className="text-[10px] text-primary font-mono uppercase tracking-[0.2em] mb-1.5 font-bold">Pathway Wisdom</div>
-  <p className="text-xs text-white/90 font-frank leading-relaxed">
-    {categoryTooltips[category as keyof typeof categoryTooltips]}
-  </p>
-  {/* Pointer Arrow - Points DOWN to settings */}
-  <div className="absolute -bottom-1 left-4 w-2 h-2 bg-slate-900 border-r border-b border-primary/20 rotate-45" />
-</div>
-
-        </div>
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 group-hover:text-primary/80 transition-colors mb-4 block text-left">
+              {cat.en}
+            </span>
+            <span className={cn(
+              "text-3xl font-frank font-black transition-transform duration-500 group-hover:scale-110",
+              category === cat.id ? "text-primary" : "text-white/80"
+            )}>
+              {cat.heb}
+            </span>
+            <p className={cn(
+              "text-[11px] font-frank text-white/50 mt-4 leading-relaxed transition-opacity duration-500 text-left",
+              category === cat.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            )}>
+              {cat.hint}
+            </p>
+            <span className="absolute -bottom-4 -left-2 text-7xl font-frank font-black text-white/[0.02] pointer-events-none group-hover:text-primary/[0.05] transition-colors">
+              {cat.heb[0]}
+            </span>
+          </button>
+        ))}
       </div>
 
-      <div className="hidden md:block h-4 w-px bg-white/10" />
-
-      {/* 🎯 DIFFICULTY */}
-      <div className="flex items-center gap-2">
-        {(['beginner', 'intermediate', 'advanced'] as const).map((level) => (
-          <div key={level} className="group relative">
-            <button
-              onClick={() => { setDifficulty(level); blurActiveElement(); }}
-              className={cn(
-                "px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-tighter transition-all duration-300 border font-bold relative z-10",
-                difficulty === level 
-                  ? "bg-primary/10 border-primary/40 text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
-                  : "border-transparent text-white/40 hover:text-white hover:bg-white/5"
-              )}
-            >
-              {level === 'beginner' ? 'מתחיל' : level === 'intermediate' ? 'בינוני' : 'מתקדם'}
-            </button>
-            
-            {/* 💡 THE ZENITH TOOLTIP (Upward) */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 p-4 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible -translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-[9999] pointer-events-none text-center w-[180px]">
-              <div className="text-[10px] text-primary font-mono uppercase tracking-[0.2em] mb-1.5 font-bold">Difficulty</div>
-              <p className="text-xs text-white/90 font-frank leading-tight whitespace-pre-line">
-                {difficultyTooltips[level]}
-              </p>
-              {/* Small Pointer Arrow */}
-              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 border-r border-b border-white/10 rotate-45" />
+      {/* 🎯 DIFFICULTY PILLS */}
+      <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-2 flex flex-wrap md:flex-nowrap gap-2">
+        {difficulties.map((diff) => (
+          <button
+            key={diff.id}
+            onClick={() => handleDifficultyClick(diff.id as any)} // 👈 WIRED UP
+            className={cn(
+              "flex-1 flex items-center justify-between px-6 py-4 rounded-[1.8rem] transition-all duration-500 group relative",
+              difficulty === diff.id 
+                ? "bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 shadow-lg" 
+                : "hover:bg-white/5 border border-transparent"
+            )}
+          >
+            <div className="text-left">
+              <span className={cn(
+                "block text-[10px] font-mono uppercase tracking-widest",
+                difficulty === diff.id ? "text-primary" : "text-white/30"
+              )}>
+                {diff.en}
+              </span>
+              <span className="block text-sm font-frank font-bold text-white/90">
+                {diff.heb}
+              </span>
             </div>
-          </div>
+            <div className="text-right opacity-40 group-hover:opacity-100 transition-opacity">
+              <span className="text-[9px] font-mono text-white/40 block">FOCUS</span>
+              <span className="text-[10px] font-frank text-primary/80">{diff.keys}</span>
+            </div>
+            {difficulty === diff.id && (
+              <div className="absolute inset-0 border-2 border-primary/20 rounded-[1.8rem] animate-pulse" />
+            )}
+          </button>
         ))}
       </div>
     </div>
