@@ -1,65 +1,96 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useCallback } from "react";
+import { useTypingStore } from "@/store/useTypingStore";
+import { exerciseTexts } from "@/lib/data/exercises";
+// Core Components
+import { TypingEngine } from "@/components/core/TypingEngine";
+import { WordDisplay } from "@/components/core/WordDisplay";
+import { VirtualKeyboard } from "@/components/core/VirtualKeyboard";
+import { StatsBar } from "@/components/core/StatsBar";
+import { LessonSelector } from "@/components/core/LessonSelector"; // Using this one
+import { LiveStats } from "@/components/core/LiveStats"; // Adding side-analytics
 
 export default function Home() {
+  const { targetText, setTarget, isFinished, reset } = useTypingStore();
+
+  // Initial Target Setup
+  useEffect(() => {
+    if (!targetText) {
+      setTarget(exerciseTexts.letters.beginner[0]);
+    }
+  }, [targetText, setTarget]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="h-screen w-full bg-[#020617] text-slate-50 flex flex-col overflow-hidden font-sans">
+      <TypingEngine /> {/* Headless - must be rendered to listen for keys */}
+
+      {/* 🏺 TOP BAR: Brand & Animated Stats */}
+      <header className="h-16 shrink-0 border-b border-white/5 bg-white/5 backdrop-blur-md flex items-center justify-between px-8">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-frank font-black text-lg">ל</div>
+          <h1 className="text-lg font-frank font-black tracking-tighter">לְמַדְיָה</h1>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        
+        {/* Your Framer Motion StatsBar */}
+        <div className="flex-1 max-w-sm mx-8">
+          <StatsBar />
         </div>
-      </main>
-    </div>
+
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[10px] font-mono tracking-widest opacity-50 uppercase tracking-[0.3em]">Temple Active</span>
+        </div>
+      </header>
+
+      {/* 📱 CENTRAL OPERATING AREA */}
+      <div className="flex-1 flex overflow-hidden p-6 gap-6">
+        
+        {/* 📜 THE ALTAR: Word Display Area */}
+        <section className="flex-[3] relative bg-white/[0.02] border border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center p-12 overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.07)_0%,transparent_70%)] pointer-events-none" />
+          
+          <WordDisplay />
+
+          {/* Completion Overlay */}
+          {isFinished && (
+            <div className="absolute inset-0 z-50 bg-slate-950/90 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-700">
+              <h2 className="text-5xl font-frank font-black mb-8 text-primary">הושלם • Complete</h2>
+              <button 
+                className="px-12 py-4 bg-primary text-primary-foreground rounded-full font-frank text-xl hover:scale-105 transition-transform"
+                onClick={reset}
+              >
+                Reset Ritual
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* ⚙️ COMMAND TOWER: Lesson Selection & Live Progress */}
+        <aside className="flex-1 max-w-sm flex flex-col gap-4 overflow-hidden">
+          
+          {/* Your LessonSelector Component */}
+          <LessonSelector />
+
+          {/* Your LiveStats Component (Progress + Stat Cards) */}
+          <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+             <LiveStats />
+             
+             {/* Simple Helper Card */}
+             <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
+                <p className="text-[11px] font-mono text-primary/60 italic leading-relaxed text-center">
+                  "Speed is a byproduct of accuracy. Let the rhythm guide your hands."
+                </p>
+             </div>
+          </div>
+          
+        </aside>
+      </div>
+
+      {/* ⌨️ INPUT FOUNDATION: Fixed Keyboard */}
+      <footer className="h-72 shrink-0 bg-white/5 border-t border-white/10 backdrop-blur-3xl flex items-center justify-center">
+        <VirtualKeyboard />
+      </footer>
+    </main>
   );
 }
