@@ -26,6 +26,21 @@ export default function Home() {
     }
   }, [isTyping]);
 
+  useEffect(() => {
+  const handleSpaceScroll = (e: KeyboardEvent) => {
+    // If the user is typing and hits space, stop the browser from scrolling
+    if (e.code === "Space" && isTyping) {
+      // Only prevent default if we aren't currently inside a text input
+      if (!(document.activeElement instanceof HTMLInputElement)) {
+        e.preventDefault();
+      }
+    }
+  };
+
+  window.addEventListener("keydown", handleSpaceScroll);
+  return () => window.removeEventListener("keydown", handleSpaceScroll);
+}, [isTyping]);
+
   return (
     <main className="min-h-screen bg-purple-950 text-white overflow-hidden flex flex-col relative font-frank selection:bg-primary/30">
       
@@ -90,9 +105,15 @@ export default function Home() {
             <LiveStats />
           </div>
           
+          <div 
+            id="typing-altar"
+            tabIndex={-1} // Makes it focusable via script but not tab
+            className="outline-none"
+          >
           {/* Holy WordDisplay - Center stage */}
           <div className="flex-1 flex items-center justify-center w-full min-h-[240px] transition-all duration-1000">
             <WordDisplay />
+          </div>
           </div>
 
           {/* Spacebar Hint */}
@@ -105,16 +126,51 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⌨️ KEYBOARD FOUNDATION */}
+      {/* ⌨️ GOLDEN COCKPIT FOUNDATION */}
       <footer className={cn(
-        "w-full h-[360px] shrink-0 bg-purple-950/80 border-t border-white/5 backdrop-blur-3xl pt-12 pb-16 z-50 relative transition-all duration-1000 ease-out",
-        isTyping ? "opacity-100 shadow-2xl border-primary/20" : "opacity-85 shadow-xl"
+        "w-full shrink-0 bg-gradient-to-t from-purple-950 via-[#0a0514] to-purple-950/60 border-t-2 border-amber-500/40 backdrop-blur-3xl py-6 z-50 relative transition-all duration-1000",
+        isTyping ? "opacity-100" : "opacity-90"
       )}>
-        <div className="max-w-5xl mx-auto px-6 h-full flex flex-col items-center justify-between">
-          <VirtualKeyboard />
-          <p className="text-[10px] font-mono uppercase tracking-[0.5em] text-white/20 pt-8">
-            English Hand <span className="mx-4 text-primary/50">•</span> Hebrew Soul
-          </p>
+        <div className="max-w-[1400px] mx-auto px-8 flex items-end justify-between gap-4">
+          
+          {/* 🕯️ LEFT WING: Sacred Philosophy */}
+          <div className="hidden lg:flex flex-col items-start gap-2 pb-6 min-w-[200px]">
+            <p className="text-[9px] font-mono uppercase tracking-[0.4em] bg-gradient-to-r from-amber-400 via-white to-amber-400 bg-clip-text text-transparent font-bold">
+              English Hand
+            </p>
+            <div className="h-px w-full bg-gradient-to-r from-amber-500/40 to-transparent" />
+            <p className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30">
+              Hebrew Soul
+            </p>
+          </div>
+
+          {/* ⌨️ CENTER: The Keyboard */}
+          <div className="flex-1 flex justify-center transform scale-90 lg:scale-95 origin-bottom">
+            <VirtualKeyboard />
+          </div>
+
+          {/* ✨ RIGHT WING: Artist Signature */}
+          <div className="hidden lg:flex pb-4 min-w-[200px] justify-end">
+            <a 
+              href="https://lamediyah.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 transition-all duration-500"
+            >
+              <div className="text-right">
+                <span className="block text-[8px] font-mono uppercase tracking-[0.3em] text-amber-500/50">
+                  Crafted by
+                </span>
+                <span className="block text-[14px] font-frank font-black tracking-tight bg-gradient-to-r from-amber-200 to-amber-500 bg-clip-text text-transparent">
+                  LamediYah
+                </span>
+              </div>
+              <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg border border-amber-400/30">
+                <span className="text-[14px] font-bold text-purple-950 group-hover:rotate-45 transition-transform duration-500">↗</span>
+              </div>
+            </a>
+          </div>
+
         </div>
       </footer>
 
