@@ -202,7 +202,7 @@ export const WelcomeRitual = () => {
             className="group w-full h-24 lg:h-28 bg-gradient-to-r from-primary via-accent to-primary text-primary-foreground rounded-[2.5rem] font-frank font-black text-3xl lg:text-4xl shadow-[0_30px_80px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_40px_100px_rgba(var(--primary-rgb),0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 overflow-hidden border-2 border-primary/20"
             >
             <span className="relative z-10 flex items-center justify-center h-full gap-4 backdrop-blur-sm">
-                ENTER TEMPLE שדגכעיהל
+                ENTER TEMPLE שדגכעיחל
                 <span className="text-primary-foreground/70 text-sm font-mono uppercase tracking-wider animate-pulse">F11</span>
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-[2.5rem]" />

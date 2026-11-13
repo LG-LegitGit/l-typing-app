@@ -7,7 +7,7 @@ export const exerciseTexts: Record<Category, Record<Difficulty, string[]>> = {
   letters: {
     beginner: [
       // 🎹 Level 1: Home Row Focus (ש ד ג כ ע י ח ל)
-      'שדגכ עיהל שדגכ עיהל',
+      'שדגכ עיחל שדגכ עיחל',
       'לחי גדש כעי שדל גדח',
       'ששש דדד גגג כככ עעע ייי חחח ללל',
       'שלג דבש חלב דג עץ', // Simple home-row words
