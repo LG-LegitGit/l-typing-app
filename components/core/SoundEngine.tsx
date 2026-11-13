@@ -3,9 +3,17 @@
 import { useEffect, useRef } from "react";
 import { useTypingStore } from "@/store/useTypingStore";
 
+// Browsers block audio until the user has interacted with the page, so every
+// play() can reject. Swallow that rejection instead of surfacing a runtime error.
+const play = (audio: HTMLAudioElement | null) => {
+  if (!audio) return;
+  audio.currentTime = 0;
+  audio.play().catch(() => { /* blocked before first interaction */ });
+};
+
 export const SoundEngine = () => {
-  const { lastTypedChar, errors, isFinished, isHesitating, accuracy } = useTypingStore();
-  
+  const { totalKeystrokes, isFinished, isHesitating, accuracy } = useTypingStore();
+
   // Audio References
   const clickRef = useRef<HTMLAudioElement | null>(null);
   const errorRef = useRef<HTMLAudioElement | null>(null);
@@ -26,36 +34,23 @@ export const SoundEngine = () => {
     hintRef.current.volume = 0.2;
   }, []);
 
-  // 1. Play Click or Error
+  // 1. Play Click or Error on every keystroke.
+  // Keyed on the keystroke count (not the typed letter) so repeated letters
+  // like "ששש" each make a sound.
   useEffect(() => {
-    if (!lastTypedChar) return;
-
-    // Check if the last stroke was an error by tracking errors count
-    // (We could also add 'isLastCorrect' to the store for cleaner logic)
-    const playStroke = async () => {
-      try {
-        if (clickRef.current) {
-          clickRef.current.currentTime = 0;
-          await clickRef.current.play();
-        }
-      } catch (e) { /* Browser block */ }
-    };
-
-    playStroke();
-  }, [lastTypedChar, errors]);
+    if (totalKeystrokes === 0) return;
+    const { lastStrokeCorrect } = useTypingStore.getState();
+    play(lastStrokeCorrect === false ? errorRef.current : clickRef.current);
+  }, [totalKeystrokes]);
 
   // 2. Play Success Ritual
   useEffect(() => {
-    if (isFinished && accuracy >= 95) {
-      successRef.current?.play();
-    }
+    if (isFinished && accuracy >= 95) play(successRef.current);
   }, [isFinished, accuracy]);
 
   // 3. Play Hint Whisper
   useEffect(() => {
-    if (isHesitating) {
-      hintRef.current?.play();
-    }
+    if (isHesitating) play(hintRef.current);
   }, [isHesitating]);
 
   return null; // Headless

@@ -20,7 +20,7 @@ export function LessonSelector() {
   const difficulties: { id: DifficultyId; heb: string; en: string; keys: string }[] = [
     { id: 'beginner', heb: "מתחיל", en: "Beginner", keys: "שדגכעיחל" },
     { id: 'intermediate', heb: "בינוני", en: "Intermediate", keys: "Full Alphabet" },
-    { id: 'advanced', heb: "מתקדם", en: "Advanced", keys: "Finals & Numbers" },
+    { id: 'advanced', heb: "מתקדם", en: "Advanced", keys: "Final Letters" },
   ];
 
   // 🧘 Logic Handlers (Now correctly used in the JSX below)

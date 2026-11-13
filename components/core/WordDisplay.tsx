@@ -14,6 +14,7 @@ export const WordDisplay = () => {
     isFinished,
     currentExercise,
     reset,
+    nextLesson,
     isHesitating,
     accuracy
   } = useTypingStore();
@@ -70,30 +71,40 @@ export const WordDisplay = () => {
         )}
 
         {/* 📜 SACRED TEXT FLOW */}
+        {/* Letters are grouped per word (each word keeps its trailing space) so
+            lines only wrap between words, never in the middle of one. */}
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-6 text-center dir-rtl max-w-4xl" dir="rtl">
-          {targetText.split("").map((char, index) => {
-            let state = "neutral";
-            if (index < userInput.length) {
-              state = userInput[index] === char ? "correct" : "incorrect";
-            } else if (index === userInput.length) {
-              state = "active";
-            }
-
+          {(targetText.match(/[^ ]+ *| +/g) ?? []).map((word, wordIndex, words) => {
+            const start = words.slice(0, wordIndex).join("").length;
             return (
-              <span
-                key={index}
-                className={cn(
-                  "text-4xl lg:text-6xl font-frank font-semibold transition-all duration-300 relative inline-block py-1 px-2",
-                  state === "neutral" && "text-white/10",
-                  state === "correct" && "text-amber-400/90 drop-shadow-[0_0_20px_rgba(251,191,36,0.5)] scale-105",
-                  state === "incorrect" && "text-red-400 animate-shake scale-105 underline decoration-red-400/50 underline-offset-4",
-                  state === "active" && "text-white scale-[1.15] drop-shadow-[0_0_25px_rgba(255,255,255,0.8)]"
-                )}
-              >
-                {char === " " ? "\u00A0" : char}
-                {state === "active" && (
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-amber-500 to-transparent rounded-full animate-pulse shadow-[0_0_15px_rgba(251,191,36,0.6)]" />
-                )}
+              <span key={wordIndex} className="flex flex-nowrap gap-x-4">
+                {word.split("").map((char, offset) => {
+                  const index = start + offset;
+                  let state = "neutral";
+                  if (index < userInput.length) {
+                    state = userInput[index] === char ? "correct" : "incorrect";
+                  } else if (index === userInput.length) {
+                    state = "active";
+                  }
+
+                  return (
+                    <span
+                      key={index}
+                      className={cn(
+                        "text-4xl lg:text-6xl font-frank font-semibold transition-all duration-300 relative inline-block py-1 px-2",
+                        state === "neutral" && "text-white/10",
+                        state === "correct" && "text-amber-400/90 drop-shadow-[0_0_20px_rgba(251,191,36,0.5)] scale-105",
+                        state === "incorrect" && "text-red-400 animate-shake scale-105 underline decoration-red-400/50 underline-offset-4",
+                        state === "active" && "text-white scale-[1.15] drop-shadow-[0_0_25px_rgba(255,255,255,0.8)]"
+                      )}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                      {state === "active" && (
+                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-amber-500 to-transparent rounded-full animate-pulse shadow-[0_0_15px_rgba(251,191,36,0.6)]" />
+                      )}
+                    </span>
+                  );
+                })}
               </span>
             );
           })}
@@ -114,11 +125,12 @@ export const WordDisplay = () => {
                 {accuracy.toFixed(0)}% Accuracy
               </p>
             </div>
-            <button 
-              onClick={reset}
+            {/* 95%+ moves on to the next exercise; below that, practice this one again */}
+            <button
+              onClick={accuracy >= 95 ? nextLesson : reset}
               className="px-12 py-5 bg-gradient-to-r from-amber-500 to-amber-600 text-purple-950 font-frank font-black text-xl rounded-3xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-amber-500/40 border-2 border-amber-500/50 hover:shadow-amber-500/60"
             >
-              CONTINUE • המשך
+              {accuracy >= 95 ? "CONTINUE • המשך" : "TRY AGAIN • שוב"}
             </button>
           </div>
         )}

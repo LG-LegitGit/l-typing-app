@@ -147,8 +147,11 @@ export const useTypingStore = create<TypingState>((set, get) => ({
   nextLesson: () => {
     const { category, difficulty } = get();
     const lessons = exerciseTexts[category]?.[difficulty] || exerciseTexts.letters.beginner;
-    const randomLesson = lessons[Math.floor(Math.random() * lessons.length)]!;
-    get().setTarget(randomLesson, category, difficulty);
+    // Move to the next exercise in order, looping back to the first after the last
+    const { currentExercise } = get();
+    const currentText = typeof currentExercise === 'string' ? currentExercise : currentExercise.text;
+    const nextIndex = (lessons.indexOf(currentText) + 1) % lessons.length;
+    get().setTarget(lessons[nextIndex], category, difficulty);
   },
 
   setCategory: (category) => {
