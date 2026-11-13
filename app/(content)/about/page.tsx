@@ -60,8 +60,13 @@ export default function AboutPage() {
       <ul>
         <li>Niqqud (vowel point) lessons</li>
         <li>More verses, prayers and roots</li>
-        <li>Opening the source code so others can contribute</li>
       </ul>
+
+      <h2>Open source</h2>
+      <p>
+        Open source: contributions and suggestions are welcome. The code is MIT-licensed and lives on{" "}
+        <a href="https://github.com/LG-LegitGit/l-typing-app">GitHub</a>.
+      </p>
 
       <h2 id="contact">Get in touch</h2>
       <p>
