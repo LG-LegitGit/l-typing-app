@@ -50,6 +50,9 @@ export const metadata: Metadata = {
     description: SITE.description,
     images: [SITE.ogImage],
   },
+  verification: {
+    google: "RxxsYUzsD5Bo9K3_QBulJaMSJArRRs-Fx9XJWL7hL50",
+  },
 };
 
 export const viewport: Viewport = {
