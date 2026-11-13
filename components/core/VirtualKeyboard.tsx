@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState, useMemo } from "react";
 
 export const VirtualKeyboard = () => {
-  const { targetText, userInput, lastTypedChar } = useTypingStore();
+  const { targetText, userInput } = useTypingStore();
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
   const nextChar = targetText[userInput.length];
@@ -18,14 +18,23 @@ export const VirtualKeyboard = () => {
     return entry ? entry[0].toUpperCase() : null;
   }, [nextChar]);
 
+  // Flash the pressed key on every keystroke (including repeated letters).
+  // State is set from a store subscription callback, not during the effect body.
   useEffect(() => {
-    if (lastTypedChar) {
-      const qwertyKey = Object.entries(hebrewKeyMap).find(([, heb]) => heb === lastTypedChar)?.[0] || lastTypedChar;
-      setActiveKey(qwertyKey?.toLowerCase());
-      const timer = setTimeout(() => setActiveKey(null), 150);
-      return () => clearTimeout(timer);
-    }
-  }, [lastTypedChar]);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const unsubscribe = useTypingStore.subscribe((state, prev) => {
+      if (state.totalKeystrokes === prev.totalKeystrokes || !state.lastTypedChar) return;
+      const typed = state.lastTypedChar;
+      const qwertyKey = Object.entries(hebrewKeyMap).find(([, heb]) => heb === typed)?.[0] || typed;
+      setActiveKey(qwertyKey.toLowerCase());
+      clearTimeout(timer);
+      timer = setTimeout(() => setActiveKey(null), 150);
+    });
+    return () => {
+      unsubscribe();
+      clearTimeout(timer);
+    };
+  }, []);
 
   const activeFinger = useMemo(() => {
     if (!nextChar) return null;
@@ -118,7 +127,16 @@ export const VirtualKeyboard = () => {
 };
 
 // Enhanced Key with sizing system
-const Key = ({ cap, active, target, hebrew, className = "", size = "md" }: any) => {
+type KeyProps = {
+  cap: string;
+  active?: boolean;
+  target?: boolean;
+  hebrew?: string;
+  className?: string;
+  size?: "sm" | "md" | "lg" | "xlg";
+};
+
+const Key = ({ cap, active, target, hebrew, className = "", size = "md" }: KeyProps) => {
   const sizeStyles = {
     sm: "min-w-[2.25rem] max-w-[2.5rem]",
     md: "min-w-[2.75rem] max-w-[3rem]", 
@@ -129,7 +147,7 @@ const Key = ({ cap, active, target, hebrew, className = "", size = "md" }: any) 
   return (
     <div 
       className={cn(
-        `h-full ${sizeStyles[size as keyof typeof sizeStyles]} flex flex-col items-center justify-center rounded-xl border-2 transition-all duration-200 select-none backdrop-blur-sm font-frank`,
+        `h-full ${sizeStyles[size]} flex flex-col items-center justify-center rounded-xl border-2 transition-all duration-200 select-none backdrop-blur-sm font-frank`,
         "bg-black/40 border-white/5 text-white/40 hover:border-white/20 hover:bg-white/10",
         target && "!border-primary/70 !bg-primary/15 !text-primary shadow-[0_0_20px_rgba(var(--primary),0.4)] animate-pulse !scale-[1.03] z-20",
         active && "!animate-key-glow !bg-gradient-to-br !from-primary !to-accent !text-primary-foreground !border-primary !shadow-2xl !shadow-primary/50 !scale-[1.02] z-30",

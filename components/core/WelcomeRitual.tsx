@@ -1,57 +1,82 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 import { useTypingStore } from "@/store/useTypingStore";
 import { exerciseTexts } from "@/lib/data/exercises";
 import { cn } from "@/lib/utils";
 
+const ONBOARDED_KEY = "temple_onboarded";
+
+// Vendor-prefixed Fullscreen API (older Safari, Firefox and Edge)
+type FullscreenElement = HTMLElement & {
+  webkitRequestFullscreen?: () => Promise<void> | void;
+  mozRequestFullScreen?: () => Promise<void> | void;
+  msRequestFullscreen?: () => Promise<void> | void;
+};
+
+// Read the "already onboarded" flag from localStorage without a hydration
+// mismatch: the server snapshot says "onboarded" so nothing renders on the
+// server, and the client re-renders with the real value.
+const subscribeNoop = () => () => {};
+const readOnboarded = () => {
+  try {
+    return localStorage.getItem(ONBOARDED_KEY) === "true";
+  } catch {
+    return false;
+  }
+};
+
 export const WelcomeRitual = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const onboarded = useSyncExternalStore(subscribeNoop, readOnboarded, () => true);
+  const [dismissed, setDismissed] = useState(false);
+  const isOpen = !onboarded && !dismissed;
   const [step, setStep] = useState(1);
   const { setTarget } = useTypingStore();
 
   const startRitual = useCallback(() => {
-    localStorage.setItem("temple_onboarded", "true");
-    setIsOpen(false);
+    try {
+      localStorage.setItem(ONBOARDED_KEY, "true");
+    } catch {
+      /* storage blocked (e.g. private mode): still let the learner in */
+    }
+    setDismissed(true);
     setTarget(exerciseTexts.letters.beginner[0], 'letters', 'beginner');
   }, [setTarget]);
 
-  // ⚔️ MOVE THIS HERE (Above the early return)
   const enterZenMode = useCallback(() => {
-    const element = document.documentElement;
-    const requestMethod = element.requestFullscreen || 
-                          (element as any).webkitRequestFullscreen || 
-                          (element as any).mozRequestFullScreen || 
-                          (element as any).msRequestFullscreen;
+    const element = document.documentElement as FullscreenElement;
+    const requestMethod = element.requestFullscreen ||
+                          element.webkitRequestFullscreen ||
+                          element.mozRequestFullScreen ||
+                          element.msRequestFullscreen;
 
     if (requestMethod) {
-      requestMethod.call(element).catch(() => {
+      Promise.resolve(requestMethod.call(element)).catch(() => {
         console.warn("Zen mode focus preserved without fullscreen.");
       });
     }
     startRitual();
   }, [startRitual]);
 
+  // Escape skips the welcome screen (only while it is open)
   useEffect(() => {
-    const hasVisited = localStorage.getItem("temple_onboarded");
-    if (!hasVisited) setIsOpen(true);
-
+    if (!isOpen) return;
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") startRitual();
     };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
-  }, [startRitual]);
+  }, [isOpen, startRitual]);
 
   // 🚪 EARLY RETURN MUST BE LAST
   if (!isOpen) return null;
 
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-purple-950/98 backdrop-blur-3xl transition-all duration-700 animate-in fade-in">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.15)_0%,transparent_70%)] pointer-events-none" />
+    <div className="fixed inset-0 z-[100] flex justify-center overflow-y-auto p-4 md:p-6 bg-purple-950/98 backdrop-blur-3xl transition-all duration-700 animate-in fade-in">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.15)_0%,transparent_70%)] pointer-events-none" />
       
-      <div className="max-w-2xl w-full glass rounded-[3.5rem] p-8 lg:p-14 border-4 border-primary/20 text-center shadow-[0_0_120px_rgba(var(--primary-rgb),0.2)] relative overflow-hidden">
+      <div className="my-auto max-w-2xl w-full glass rounded-[3.5rem] p-8 lg:p-14 border-4 border-primary/20 text-center shadow-[0_0_120px_rgba(var(--primary-rgb),0.2)] relative overflow-hidden">
         
         {/* STEP INDICATOR */}
         <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-2">

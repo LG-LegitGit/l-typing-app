@@ -17,10 +17,7 @@ export const StatsBar = () => {
   const [liveWPM, setLiveWPM] = useState(0);
 
   useEffect(() => {
-    if (!startTime || endTime) {
-      if (!startTime) setLiveWPM(0);
-      return;
-    }
+    if (!startTime || endTime) return;
 
     const interval = setInterval(() => {
       setLiveWPM(calculateWPM(userInput, startTime, endTime));
@@ -29,7 +26,7 @@ export const StatsBar = () => {
     return () => clearInterval(interval);
   }, [userInput, startTime, endTime]);
 
-  const displayWPM = endTime ? calculateWPM(userInput, startTime, endTime) : liveWPM;
+  const displayWPM = !startTime ? 0 : endTime ? calculateWPM(userInput, startTime, endTime) : liveWPM;
   const accuracy = calculateAccuracy(totalKeystrokes, errors);
 
   return (

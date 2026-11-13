@@ -27,7 +27,7 @@ export const WordDisplay = () => {
   // 🔑 HEBREW KEY HINT MAPPER
   const getHintKey = (char: string) => {
     if (char === " " || !char) return "Space";
-    const entry = Object.entries(hebrewKeyMap).find(([_, heb]) => heb === char);
+    const entry = Object.entries(hebrewKeyMap).find(([, heb]) => heb === char);
     return entry ? entry[0].toUpperCase() : null;
   };
 
@@ -41,7 +41,7 @@ export const WordDisplay = () => {
       {wisdom && (
         <div className="animate-in fade-in slide-in-from-top-4 duration-1000 text-center space-y-2 max-w-2xl mx-auto backdrop-blur-sm bg-black/20 rounded-2xl p-6 border border-amber-500/10 shadow-xl shadow-amber-500/10">
           <h3 className="text-xl lg:text-2xl font-frank italic text-amber-200/90 leading-relaxed drop-shadow-sm">
-            "{wisdom.translation}"
+            &ldquo;{wisdom.translation}&rdquo;
           </h3>
           <p className="text-[11px] font-mono uppercase tracking-[0.35em] text-amber-400/70 font-semibold">
             {wisdom.wisdom}
@@ -166,7 +166,7 @@ export const WordDisplay = () => {
                   {typeof currentExercise === 'string' ? currentExercise : wisdom?.translation}
                 </h3>
                 <p className="text-2xl lg:text-3xl font-light italic text-white/90 leading-relaxed max-w-2xl mx-auto">
-                  "{wisdom.translation}"
+                  &ldquo;{wisdom.translation}&rdquo;
                 </p>
               </div>
 
