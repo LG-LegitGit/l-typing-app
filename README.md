@@ -32,7 +32,7 @@ LamediYah is a **minimalist typing temple** designed to teach Hebrew through **L
 
 ```
 SETTINGS SHRINE      → Letters/Roots/Verses/Prayers + מתחיל/בינוני/מתקדם
-שדגכעיהל            → Type with [SPACE ש] dual hints
+שדגכעיחל            → Type with [SPACE ש] dual hints
 Lessons COLLAPSE     → Altar center stage
 🕯 REVEAL WISDOM     → "בראשית ברא אלהים" → "In the beginning..."
 CONTINUE • המשך      → Next sacred exercise

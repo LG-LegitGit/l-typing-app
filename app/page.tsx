@@ -9,6 +9,8 @@ import { TypingEngine } from "@/components/core/TypingEngine";
 import { SoundEngine } from "@/components/core/SoundEngine";
 import { useTypingStore } from "@/store/useTypingStore";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { MobileNotice } from "@/components/site/MobileNotice";
 
 export default function Home() {
   const { isTyping, category, difficulty } = useTypingStore();  
@@ -69,6 +71,12 @@ export default function Home() {
             <p className="text-[8px] font-mono uppercase tracking-[0.3em] text-primary/70">Teaches Typing</p>
           </div>
         </div>
+        {/* 🧭 QUIET NAV - guides & about (fades with header) */}
+        <nav aria-label="Site" className={cn("mt-4 flex items-center justify-center gap-5 text-[11px] font-mono uppercase tracking-[0.3em] text-white/40", isTyping && "pointer-events-none")}>
+          <Link href="/guides" className="hover:text-primary transition-colors">Guides</Link>
+          <span className="w-1 h-1 rounded-full bg-white/20" />
+          <Link href="/about" className="hover:text-primary transition-colors">About</Link>
+        </nav>
       </header>
 
       {/* 🎯 LESSON SELECTOR - CSS GRID COLLAPSE PERFECTION */}
@@ -175,6 +183,7 @@ export default function Home() {
       </footer>
 
       <WelcomeRitual />
+      <MobileNotice />
     </main>
   );
 }

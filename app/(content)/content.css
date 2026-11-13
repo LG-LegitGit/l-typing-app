@@ -1,0 +1,107 @@
+/* 📜 Reading styles for guides & about pages (the typing app is untouched) */
+
+.prose-temple {
+  color: rgb(255 255 255 / 0.82);
+  font-size: 1.075rem;
+  line-height: 1.8;
+}
+.prose-temple h1 {
+  font-family: var(--font-frank-ruhl), serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 3.25rem);
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.prose-temple h2 {
+  font-family: var(--font-frank-ruhl), serif;
+  font-weight: 800;
+  font-size: 1.75rem;
+  color: #fff;
+  margin-top: 3rem;
+  margin-bottom: 0.75rem;
+}
+.prose-temple h3 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: rgb(252 211 77);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+.prose-temple p {
+  margin: 1rem 0;
+}
+.prose-temple .lead {
+  font-size: 1.25rem;
+  color: rgb(255 255 255 / 0.7);
+}
+.prose-temple :is(p, li, td) a {
+  color: rgb(252 211 77);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-temple :is(p, li, td) a:hover {
+  color: #fff;
+}
+.prose-temple ul,
+.prose-temple ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+.prose-temple ul {
+  list-style: disc;
+}
+.prose-temple ol {
+  list-style: decimal;
+}
+.prose-temple li {
+  margin: 0.4rem 0;
+}
+.prose-temple li::marker {
+  color: rgb(245 158 11 / 0.8);
+}
+.prose-temple strong {
+  color: #fff;
+}
+.prose-temple kbd {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.85em;
+  padding: 0.1em 0.45em;
+  border-radius: 0.4rem;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  background: rgb(255 255 255 / 0.06);
+  color: #fff;
+  white-space: nowrap;
+}
+.prose-temple .he {
+  font-family: var(--font-frank-ruhl), serif;
+  font-size: 1.25em;
+  color: #fff;
+}
+.prose-temple table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.98rem;
+}
+.prose-temple th,
+.prose-temple td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+}
+.prose-temple th {
+  color: rgb(252 211 77);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.prose-temple .callout {
+  border: 1px solid rgb(245 158 11 / 0.3);
+  background: rgb(245 158 11 / 0.06);
+  border-radius: 1.25rem;
+  padding: 1.1rem 1.4rem;
+  margin: 1.75rem 0;
+}
