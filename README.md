@@ -1,129 +1,129 @@
-## 🏛️ **LamediYah Teaches Typing (ל)**
+# 🏛️ LamediYah Teaches Typing (ל)
 
 <div align="center">
-  <img src="./public/assets/Screenshot.png" width="900" alt="LamediYah Typing Temple" />
+  <img src="./public/assets/Screenshot.png" width="900" alt="LamediYah Teaches Typing: Hebrew lesson with on-screen Hebrew keyboard" />
+
+  **Learn Hebrew touch typing on the keyboard you already have.**
+  <br>
+  English Hand · Hebrew Soul
+
+  **[lamediyah.app](https://lamediyah.app)** · [Guides](https://lamediyah.app/guides) · [About](https://lamediyah.app/about)
 </div>
 
-**Master the Sacred Letters through Touch Typing Ritual.** English Hand -  Hebrew Soul.
+---
 
-***
+## What it is
 
-## 🧘 **The Sacred Vision**
+LamediYah is a free, open-source Hebrew touch typing trainer for English speakers, especially students of **Biblical Hebrew**. You practice on the standard Israeli Hebrew layout, with an on-screen keyboard that shows both the English key and the Hebrew letter, so you don't need stickers or a special keyboard.
 
-LamediYah is a **minimalist typing temple** designed to teach Hebrew through **Lucid Typing**—a flow state where every keystroke becomes meditation. From the "Welcome Ritual" to the "Golden Cockpit," every pixel serves the practice.
+Instead of random drills, you type real Hebrew: letters, three-letter **roots**, **Tanakh verses** and **prayers**, with the meaning of many of them revealed when you finish.
 
-```
-תורה STUDY → Black parchment + gold letters
-תפילה PRAYER → Zero distraction
-לימוד LEARNING → Perfect focus
-```
+## Features
 
-## ✨ **Core Rituals**
+- **Four categories:** Letters · Roots (שורשים) · Verses (פסוקים) · Prayers (תפילות)
+- **Three levels:** Beginner (home row ש ד ג כ ע י ח ל) · Intermediate (full alphabet) · Advanced (final letters and numbers)
+- **Dual key hints:** each letter shows its English key, so you can type with no layout stickers
+- **Virtual keyboard:** highlights the next key as you type
+- **Live stats:** words per minute and accuracy as you type
+- **Wisdom reveal:** a translation, source and meaning after key verses, prayers and roots
+- **Sound feedback:** subtle audio cues (Web Audio API)
+- **Distraction-free:** one screen, no scrolling, the interface fades while you type
+- **Guides:** [Hebrew keyboard layout](https://lamediyah.app/guides/hebrew-keyboard-layout), [typing Hebrew on Windows and Mac](https://lamediyah.app/guides/type-hebrew-on-windows-mac), [typing Biblical Hebrew](https://lamediyah.app/guides/biblical-hebrew-typing)
 
-- **🏺 Dual Type Hints** - English key + Hebrew letter (multi-line safe)
-- **⚡ Sacred Altar** - Zero-scroll viewport, bulletproof spacebar protection
-- **⌨️ Golden Cockpit** - Philosophy wings + VirtualKeyboard + signature
-- **🕯️ Wisdom Modal** - Tanakh verses, prayers, roots with meaning
-- **📊 LiveStats** - Real-time WPM, accuracy celebration (95%+ = הושלם)
-- **🎵 SoundEngine** - Tactile audio feedback
-- **🧘 Focus Lockdown** - No spacebar scrolling, instant blur handlers
+> **Note:** LamediYah needs a physical keyboard. On phones and tablets it shows a notice with a link to open it on a computer.
 
-## 🗝️ **The Sacred Flow**
+## Quick start
 
-```
-SETTINGS SHRINE      → Letters/Roots/Verses/Prayers + מתחיל/בינוני/מתקדם
-שדגכעיחל            → Type with [SPACE ש] dual hints
-Lessons COLLAPSE     → Altar center stage
-🕯 REVEAL WISDOM     → "בראשית ברא אלהים" → "In the beginning..."
-CONTINUE • המשך      → Next sacred exercise
-```
-
-## 🛠 **Tech Temple**
-
-```
-Framework:  Next.js 16.1.4 (App Router) + TypeScript 5
-Styling:    Tailwind CSS 4 + cn() + Headless UI (Radix)
-State:      Zustand 5 (fully typed CategoryId/DifficultyId)
-Animation:  Framer Motion 12 + Tailwind animate-in
-Audio:      Web Audio API (SoundEngine)
-Fonts:      Frank Ruhl Libre (Hebrew) + Geist Mono (keys)
-Deployment: Vercel (h-screen viewport lock)
-```
-
-## 📂 **Temple Architecture**
-
-```
-app/page.tsx (h-screen no-scroll lock)
-├── TypingEngine (global key capture)
-├── SoundEngine (audio immersion)
-├── Header (shrink-0 - fades when typing)
-├── LessonSelector (Shrine - max-h-[500px] collapse)
-├── Sacred Altar (flex-1)
-│   ├── LiveStats (scale-110 when typing)
-│   ├── WordDisplay (dual hints + wisdom modal)
-│   └── Breadcrumb (amber-500)
-└── Golden Cockpit (h-[300px] shrink-0)
-    ├── English Hand • Hebrew Soul (xl wings)
-    ├── VirtualKeyboard (scale-95 origin-bottom)
-    └── LamediYah Signature (↗ lamediyah.com)
-```
-
-## 🎨 **Sacred Palette**
-
-```
-Background: Deep Space #0a0514 (focus perfected)
-Primary:    Sacred Purple (var(--primary))
-Accents:    Golden Amber (amber-500 glow)
-Text:       White on black = Maximal contrast
-Glows:      shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)]
-```
-
-## 🚀 **Quick Start**
+Requirements: **Node.js 20+** and **pnpm**.
 
 ```bash
+git clone https://github.com/LG-LegitGit/l-typing-app.git
+cd l-typing-app
 pnpm install
 pnpm dev          # http://localhost:3000
-pnpm build        # Production build
-pnpm preview      # Preview production
 ```
 
-## 📱 **Responsive Perfection**
+Other scripts:
+
+```bash
+pnpm build        # production build
+pnpm start        # serve the production build
+pnpm lint         # ESLint
+```
+
+### Environment variables (optional)
+
+Copy `.env.example` to `.env.local`. Everything works without it, except the contact form on `/about`.
+
+| Variable | Used for |
+|---|---|
+| `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | Contact form via [Web3Forms](https://web3forms.com). Without it, the form shows a "being set up" message. |
+
+## Tech stack
+
+| | |
+|---|---|
+| Framework | Next.js 16 (App Router) + TypeScript |
+| Styling | Tailwind CSS 4, shadcn/ui (Radix) |
+| State | Zustand |
+| Animation | Framer Motion |
+| Audio | Web Audio API |
+| Fonts | Frank Ruhl Libre (Hebrew), Geist |
+| Hosting | Vercel |
+
+## Project structure
 
 ```
-xl (1400px+): Full cockpit wings visible
-lg:           Keyboard scale-95
-md:           Compact shrine
-Mobile:       Keyboard-only cockpit, touch-optimized hints
+app/
+├── page.tsx               # the typing app (single screen)
+├── layout.tsx             # site metadata, Open Graph, JSON-LD
+├── (content)/             # about + guides pages, shared layout
+├── robots.ts, sitemap.ts, manifest.ts
+components/
+├── core/                  # TypingEngine, WordDisplay, VirtualKeyboard,
+│                          # LessonSelector, LiveStats, SoundEngine, WelcomeRitual
+├── site/                  # ContactForm, GuideParts, MobileNotice
+└── ui/                    # shadcn/ui primitives
+lib/
+├── data/                  # exercises, alphabet, keyboard maps, phonetics, wisdom
+└── site.ts                # site-wide SEO values (URL, title, guides list)
+store/useTypingStore.ts    # Zustand store: lesson, progress, stats
 ```
 
-## 🔮 **Future Rituals**
+**Adding practice content:** exercises live in `lib/data/exercises.ts` (organized by category and level), and translations or meanings in `lib/data/wisdom.ts`.
 
-```markdown
+## Roadmap
+
 - [ ] Niqqud (vowel points) lessons
 - [ ] Custom lesson creator
 - [ ] Progress export (JSON/CSV)
 - [ ] PWA offline mode
 - [ ] macOS/iOS viewport fixes
-```
 
-## 🙏 **Contributing**
+## Contributing
 
-1. Fork → `feat/dual-hints` branch
-2. `pnpm install`
-3. Sacred commits: `feat: hand-soul type hints`
-4. Test: `pnpm dev` (no scrollbars!)
-5. PR with screenshot → `main`
+Contributions are welcome: bug fixes, new exercises, corrections to Hebrew text or translations, and accessibility improvements.
 
-## 📄 **License**
+1. Fork the repo and create a branch: `git checkout -b feat/your-change`
+2. `pnpm install` and `pnpm dev`
+3. Make your change. Before opening a PR, run `pnpm build` and `pnpm lint`.
+4. Use clear commit messages (for example `feat: add niqqud lesson 1` or `fix: correct home row hint`)
+5. Open a pull request against `main`. For UI changes, include a screenshot.
 
-[MIT](./LICENSE) © LamediYah
+Found a mistake in a verse, root or translation? Open an issue with the reference (for example, Genesis 1:1) and the correction.
 
-***
+## License
+
+The code is released under the [MIT License](./LICENSE) © 2026 LamediYah.
+
+**Trademark:** the name "LamediYah", the ל (lamed) logo and related branding are not covered by the MIT License. You're welcome to fork and build on the code, but please give your version its own name and logo, and don't present it as the official LamediYah app.
+
+Biblical and liturgical Hebrew texts used in the exercises are in the public domain.
+
+---
 
 <div align="center">
-  <img src="./public/assets/lamed.png" width="120" />
+  <img src="./public/assets/lamed.png" width="120" alt="LamediYah lamed logo" />
   <br><br>
-  <span class="text-xs opacity-50">English Hand -  Hebrew Soul</span>
+  <sub>English Hand · Hebrew Soul · <a href="https://lamediyah.com">lamediyah.com</a></sub>
 </div>
-```
-
