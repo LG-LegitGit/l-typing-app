@@ -6,7 +6,7 @@ import { exerciseTexts } from '@/lib/data/exercises';
 // 🧠 Backward compatible - works with your CURRENT string[] data
 type Exercise = string; // Current data structure
 type WisdomExercise = {
-    pronunciation: any; text: string; meaning?: string; source?: string; transliteration?: string 
+    pronunciation?: string; text: string; meaning?: string; source?: string; transliteration?: string 
 };
 
 interface TypingState {
@@ -39,9 +39,13 @@ interface TypingState {
   getWisdomData: () => WisdomExercise | null;
 }
 
+// Start on the first letters exercise so returning visitors (who skip the
+// welcome screen) can begin typing right away.
+const firstExercise = exerciseTexts.letters.beginner[0];
+
 export const useTypingStore = create<TypingState>((set, get) => ({
-  targetText: "",
-  currentExercise: "",
+  targetText: firstExercise,
+  currentExercise: firstExercise,
   userInput: "",
   startTime: null,
   endTime: null,

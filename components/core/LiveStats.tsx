@@ -1,6 +1,7 @@
 // components/core/LiveStats.tsx
 "use client";
 
+import type { ReactNode } from "react";
 import { useTypingStore } from "@/store/useTypingStore";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
@@ -32,7 +33,15 @@ export function LiveStats() {
   );
 }
 
-function StatCard({ label, value, highlight, warning, critical }: any) {
+type StatCardProps = {
+  label: string;
+  value: ReactNode;
+  highlight?: boolean;
+  warning?: boolean;
+  critical?: boolean;
+};
+
+function StatCard({ label, value, highlight, warning, critical }: StatCardProps) {
   return (
     <div className={cn(
       "p-4 bg-white/5 backdrop-blur-md rounded-2xl border transition-all duration-500",

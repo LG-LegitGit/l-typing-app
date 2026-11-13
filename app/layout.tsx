@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Frank_Ruhl_Libre } from "next/font/google"; // 👈 Add this
+import { Geist, Frank_Ruhl_Libre } from "next/font/google";
 import "./globals.css";
 import { Analytics } from '@vercel/analytics/next';
 import { SITE } from "@/lib/site";

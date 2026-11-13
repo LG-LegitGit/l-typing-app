@@ -6,7 +6,7 @@ import { PracticeCta } from "@/components/site/GuideParts";
 export const metadata: Metadata = {
   title: "Hebrew Typing Guides",
   description:
-    "Free guides for English speakers learning to type Hebrew: the Hebrew keyboard layout, setting up Hebrew on Windows and Mac, and typing Biblical Hebrew.",
+    "Free guides for English speakers learning to type Hebrew: the Hebrew keyboard layout, setting up Hebrew on Windows and Mac, typing Biblical Hebrew, and reading Hebrew numbers.",
   alternates: { canonical: "/guides" },
   openGraph: {
     url: `${SITE.url}/guides`,
