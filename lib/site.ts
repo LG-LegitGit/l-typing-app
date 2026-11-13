@@ -46,4 +46,10 @@ export const GUIDES = [
     description:
       "Why touch typing helps Biblical Hebrew students, how roots and final letters work, and how to practice with real Tanakh verses.",
   },
+  {
+    slug: "hebrew-numbers",
+    title: "Hebrew Numbers and Numerals",
+    description:
+      "How Hebrew letters work as numbers, how to read references like תהילים כג:א, and the Biblical number words from one to a thousand.",
+  },
 ] as const;
