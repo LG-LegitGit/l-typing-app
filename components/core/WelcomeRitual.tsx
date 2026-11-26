@@ -110,7 +110,7 @@ export const WelcomeRitual = () => {
             </p>
             <button 
               onClick={() => setStep(2)}
-              className="group w-full py-8 lg:py-10 bg-gradient-to-r from-white via-gray-50 to-white text-black rounded-[2.5rem] font-frank font-black text-2xl lg:text-3xl shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              className="group relative w-full py-8 lg:py-10 bg-gradient-to-r from-white via-gray-50 to-white text-black rounded-[2.5rem] font-frank font-black text-2xl lg:text-3xl shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
             >
               <span className="relative z-10">HOW IT WORKS</span>
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -224,11 +224,10 @@ export const WelcomeRitual = () => {
 
             <button 
             onClick={enterZenMode} // 👈 Fullscreen + start typing
-            className="group w-full h-24 lg:h-28 bg-gradient-to-r from-primary via-accent to-primary text-primary-foreground rounded-[2.5rem] font-frank font-black text-3xl lg:text-4xl shadow-[0_30px_80px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_40px_100px_rgba(var(--primary-rgb),0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 overflow-hidden border-2 border-primary/20"
+            className="group relative w-full h-24 lg:h-28 bg-primary text-primary-foreground rounded-[2.5rem] font-frank font-black text-3xl lg:text-4xl shadow-[0_30px_80px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_40px_100px_rgba(var(--primary-rgb),0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 overflow-hidden border-2 border-primary/20"
             >
-            <span className="relative z-10 flex items-center justify-center h-full gap-4 backdrop-blur-sm">
-                ENTER TEMPLE שדגכעיחל
-                <span className="text-primary-foreground/70 text-sm font-mono uppercase tracking-wider animate-pulse">F11</span>
+            <span className="relative z-10 flex items-center justify-center h-full gap-4">
+                ENTER LAMEDIYAH שדגכעיחל
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-[2.5rem]" />
             </button>
